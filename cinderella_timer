@@ -1,0 +1,45 @@
+require 'discordrb'
+require "date"
+require 'holiday_japan'
+
+bot = Discordrb::Commands::CommandBot.new(
+  token: "ODI1MDQ4MzQ5MDIyNzQ4Njgy.YF4QJw.sw0yJF9d_Qxh97kKAx6g02Zsqpc",
+  client_id: 825048349022748682,
+  prefix:'/'
+)
+
+bot.command :hi do |event|
+  # event.send_message("Hi! #{event.user.name}")
+  now = Date.today + 2
+  if HolidayJapan.check(now) || now.wday == 0 || now.wday == 6
+    event.send_message("明日はお休み")
+    voice_bot = bot.voice_connect 825262242555101199
+    voice_bot.play_file 'data/kyuujitu.mp3'
+  else
+    event.send_message("明日は平日")
+    voice_bot = bot.voice_connect 825262242555101199
+    voice_bot.play_file 'data/heijitu.mp3'
+  end
+end
+
+previous = Date.today
+bot.heartbeat do |event|
+  now = Date.today
+  # 日付が変わったときの判定(日付変わってから最大40秒の誤差あり)
+  if previous < now then
+    # 翌日が祝日か土日
+    if HolidayJapan.check(now) || now.wday == 0 || now.wday == 6
+      event.send_message("明日はお休み")
+      voice_bot = bot.voice_connect 825262242555101199
+      voice_bot.play_file 'data/kyuujitu.mp3'
+    else
+      event.send_message("明日は平日")
+      voice_bot = bot.voice_connect 825262242555101199
+      voice_bot.play_file 'data/heijitu.mp3'
+    end
+
+    previous = now
+  end
+end
+
+bot.run
