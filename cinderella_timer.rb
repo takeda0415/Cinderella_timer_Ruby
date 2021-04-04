@@ -60,7 +60,7 @@ bot.command :disconnect do |event|
 end
 
 
-previous = Date.today -1
+previous = Date.today
 # previous = Date.today
 bot.heartbeat do |event|
   now = Date.today
