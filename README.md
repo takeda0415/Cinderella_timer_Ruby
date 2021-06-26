@@ -1,4 +1,4 @@
 ＃Cinderella-timer
-
 Rubyバージョン
+
 Discordrbライブラリが未更新で、ボイスチャンネルからの切断時にバグが発生するため、開発ストップ
